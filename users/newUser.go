@@ -29,7 +29,8 @@ func newUser(body io.ReadCloser) string {
 		DisplayPicUrl: displayPicUrl.Raw,
 	}
 
-	db, err := sql.Open("mysql", "root:Cypress123!!@tcp(localhost:3306)/Twitter")
+	DbAccessString := GoDotEnvVariable("DB_ACCESS_STRING")
+	db, err := sql.Open("mysql", DbAccessString)
 
 	query := "insert into users (email, username, dateCreated, displayPic) values ('" + userToCreate.Email + "', '" + userToCreate.Username + "', '" + userToCreate.DateCreated + "', '" + userToCreate.DisplayPicUrl + " ');"
 

@@ -1,14 +1,13 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 	"twitterClone/users"
 )
 
 func main() {
-	fmt.Println("working")
-
+	log.Printf("Up and Running")
 	http.HandleFunc("/users/", users.Users)
 
 	http.ListenAndServe(":2828", nil)

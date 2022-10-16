@@ -10,7 +10,9 @@ import (
 func getUserById(id string) string {
 	var marshalled []byte
 	retrievedUser := new(User)
-	db, err := sql.Open("mysql", "root:Cypress123!!@tcp(localhost:3306)/Twitter")
+	DbAccessString := GoDotEnvVariable("DB_ACCESS_STRING")
+	fmt.Println(DbAccessString)
+	db, err := sql.Open("mysql", DbAccessString)
 
 	query := "SELECT * FROM Twitter.users WHERE userId = " + id + ";"
 
