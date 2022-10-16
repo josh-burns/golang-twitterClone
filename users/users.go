@@ -1,10 +1,7 @@
 package users
 
 import (
-	"database/sql"
-	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"regexp"
 	"strconv"
@@ -18,6 +15,13 @@ func isEmailValid(e string) bool {
 	return emailRegex.MatchString(e)
 }
 
+type NewUser struct {
+	Email         string
+	Username      string
+	DateCreated   string
+	DisplayPicUrl string
+}
+
 type User struct {
 	Id            int
 	Email         string
@@ -26,86 +30,12 @@ type User struct {
 	DisplayPicUrl string
 }
 
-func getUserById(id string) string {
-	var marshalled []byte
-	retrievedUser := new(User)
-	db, err := sql.Open("mysql", "root:Cypress123!!@tcp(localhost:3306)/Twitter")
-
-	query := "SELECT * FROM Twitter.users WHERE userId = " + id + ";"
-
-	if err != nil {
-		log.Fatal("error initialising connection with DB - ", err)
-	}
-
-	rows, _ := db.Query(query)
-	defer rows.Close()
-	fmt.Println(rows)
-	for rows.Next() {
-		err := rows.Scan(
-			&retrievedUser.Id,
-			&retrievedUser.Username,
-			&retrievedUser.Email,
-			&retrievedUser.DateCreated,
-			&retrievedUser.DisplayPicUrl,
-		)
-
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		marshalled, err = json.Marshal(retrievedUser)
-		if err != nil {
-			fmt.Println(err)
-		}
-
-	}
-	return string(marshalled)
-}
-
-func getUserByEmail(email string) string {
-	var marshalled []byte
-	retrievedUser := new(User)
-	db, err := sql.Open("mysql", "root:Cypress123!!@tcp(localhost:3306)/Twitter")
-
-	query := "SELECT * FROM Twitter.users WHERE email = \"" + email + "\";"
-
-	if err != nil {
-		log.Fatal("error initialising connection with DB - ", err)
-	}
-
-	rows, _ := db.Query(query)
-	defer rows.Close()
-
-	for rows.Next() {
-		err := rows.Scan(
-			&retrievedUser.Id,
-			&retrievedUser.Username,
-			&retrievedUser.Email,
-			&retrievedUser.DateCreated,
-			&retrievedUser.DisplayPicUrl,
-		)
-
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		marshalled, err = json.Marshal(retrievedUser)
-		if err != nil {
-			fmt.Println(err)
-		}
-	}
-	return string(marshalled)
-
-}
-
-func newUser() {
-
-}
 func Users(w http.ResponseWriter, r *http.Request) {
+	splitUrl := strings.Split(r.URL.String(), "/")
 	switch r.Method {
+
 	case "GET":
 		w.Header().Add("Content-Type", "application/json")
-		splitUrl := strings.Split(r.URL.String(), "/")
 		userId := splitUrl[len(splitUrl)-1]
 		intId, _ := strconv.Atoi(userId)
 
@@ -113,13 +43,17 @@ func Users(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprint(w, getUserById(userId))
 		} else {
 			if isEmailValid(userId) {
+				w.WriteHeader(200)
 				fmt.Fprint(w, getUserByEmail(userId))
+
 			} else {
 				fmt.Fprint(w, "invalid user supplied")
 			}
 		}
 
 	case "POST":
-		fmt.Println("this is a post request")
+		w.Header().Add("Content-Type", "application/json")
+		w.WriteHeader(201)
+		fmt.Fprintf(w, newUser(r.Body))
 	}
 }
