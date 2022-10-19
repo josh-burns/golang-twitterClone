@@ -7,11 +7,19 @@ import (
 	"log"
 )
 
+type Tweet struct {
+	id          int
+	authorId    int
+	dateTweeted string
+	tweetBody   string
+	likes       int
+	retweets    int
+}
+
 func getUserById(id string) string {
 	var marshalled []byte
 	retrievedUser := new(User)
 	DbAccessString := GoDotEnvVariable("DB_ACCESS_STRING")
-	fmt.Println(DbAccessString)
 	db, err := sql.Open("mysql", DbAccessString)
 
 	query := "SELECT * FROM Twitter.users WHERE userId = " + id + ";"
