@@ -38,17 +38,12 @@ func GoDotEnvVariable(key string) string {
 	return os.Getenv(key)
 }
 
-func likeTweet() {
-
-}
-
-func retweetTweet() {
+func retweetTweet(tweetId int) {
 
 }
 
 func Tweets(w http.ResponseWriter, r *http.Request) {
 	splitUrl := strings.Split(r.URL.String(), "/")
-	fmt.Println("this is the tweets working")
 	w.Header().Add("Content-Type", "application/json")
 
 	switch r.Method {
@@ -58,6 +53,11 @@ func Tweets(w http.ResponseWriter, r *http.Request) {
 		if splitUrl[len(splitUrl)-1] == "new" {
 			fmt.Println("new tweet incoming")
 			fmt.Fprintf(w, newTweet(r.Body))
+		}
+		if splitUrl[len(splitUrl)-1] == "like" {
+			fmt.Println("Liking tweet...")
+			likeTweet(r.Body)
+
 		}
 	}
 }

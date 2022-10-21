@@ -2,7 +2,6 @@ package users
 
 import (
 	"database/sql"
-	"fmt"
 	"io"
 	"log"
 	"strconv"
@@ -12,8 +11,6 @@ import (
 )
 
 func newUser(body io.ReadCloser) string {
-	fmt.Println("heyhey")
-	fmt.Println("heyhey")
 	bytes, _ := io.ReadAll(body)
 
 	jsonString := string(bytes)
@@ -28,6 +25,8 @@ func newUser(body io.ReadCloser) string {
 		DateCreated:   time.Now().Format(time.RFC3339),
 		DisplayPicUrl: displayPicUrl.Raw,
 	}
+
+	log.Printf("Creating user with email address %s ... ", userToCreate.Email)
 
 	DbAccessString := GoDotEnvVariable("DB_ACCESS_STRING")
 	db, err := sql.Open("mysql", DbAccessString)

@@ -13,6 +13,8 @@ func GetTweetbyId(id int) string {
 	DbAccessString := GoDotEnvVariable("DB_ACCESS_STRING")
 	db, _ := sql.Open("mysql", DbAccessString)
 
+	log.Printf("getting tweet by id %d ...", id)
+
 	query := fmt.Sprintf("SELECT * FROM Twitter.tweets WHERE Id = %v;", id)
 
 	rows, _ := db.Query(query)

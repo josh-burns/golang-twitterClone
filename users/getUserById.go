@@ -22,6 +22,8 @@ func getUserById(id string) string {
 	DbAccessString := GoDotEnvVariable("DB_ACCESS_STRING")
 	db, err := sql.Open("mysql", DbAccessString)
 
+	log.Printf("getting user by id  %s ... ", id)
+
 	query := "SELECT * FROM Twitter.users WHERE userId = " + id + ";"
 
 	if err != nil {

@@ -21,6 +21,8 @@ func getTweets(id string) string {
 	rows, _ := db.Query(query)
 	defer rows.Close()
 
+	log.Printf("getting tweets for userID " + id)
+
 	for rows.Next() {
 		SingleTweet := new(Tweet)
 		err := rows.Scan(
