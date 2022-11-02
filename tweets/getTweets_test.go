@@ -9,10 +9,9 @@ import (
 )
 
 func TestFindByID(t *testing.T) {
+	// Set up the mock db
 	db, mock, err := sqlmock.New()
-
 	defer db.Close()
-
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
@@ -31,6 +30,7 @@ func TestFindByID(t *testing.T) {
 
 	expected := "{\"Id\":1,\"AuthorId\":81,\"DateTweeted\":\"2022-03-27T12:06:50Z\",\"TweetBody\":\"hello\",\"Likes\":3,\"Retweets\":9}"
 
+	// fail test if method response doesn't match
 	if res != expected {
 		t.Error("\n EXPECTED: \n", expected, "\n GOT: \n ", res)
 	}

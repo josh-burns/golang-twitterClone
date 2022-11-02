@@ -54,7 +54,6 @@ func retweetTweet(tweetId int) {
 func Tweets(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	splitUrl := strings.Split(r.URL.String(), "/")
 	w.Header().Add("Content-Type", "application/json")
-	fmt.Println(db)
 	switch r.Method {
 	case "GET":
 		fmt.Fprintf(w, GetTweets(db, splitUrl[len(splitUrl)-1]))
@@ -65,8 +64,16 @@ func Tweets(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		}
 		if splitUrl[len(splitUrl)-1] == "like" {
 			fmt.Println("Liking tweet...")
-			likeTweet(r.Body)
+			likeTweetResponse := likeTweet(r.Body)
 
+			switch likeTweetResponse {
+			case "liked":
+				fmt.Fprintf(w, "success")
+
+			case "duplicateTweet":
+				fmt.Fprintf(w, "Tweet Already liked")
+
+			}
 		}
 	}
 }

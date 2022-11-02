@@ -78,6 +78,8 @@ func likeTweet(body io.ReadCloser) string {
 
 		return "liked"
 
+	} else {
+		return "duplicateTweet"
 	}
 
 	return "like function complete"

@@ -35,7 +35,7 @@ func main() {
 
 	DbAccessString := GoDotEnvVariable("DB_ACCESS_STRING")
 	db, err := sql.Open("mysql", DbAccessString)
-	db.Begin()
+
 	if err != nil {
 		panic(err)
 	}
