@@ -7,18 +7,19 @@ import (
 	"strings"
 )
 
-func getTweets(id string) string {
+func GetTweets(db *sql.DB, id string) string {
 	var tweetArray []string
-	DbAccessString := GoDotEnvVariable("DB_ACCESS_STRING")
-	db, err := sql.Open("mysql", DbAccessString)
+	// DbAccessString := GoDotEnvVariable("DB_ACCESS_STRING")
+	// db, err := sql.Open("mysql", DbAccessString)
+
+	query := "SELECT * FROM Twitter.tweets WHERE authorId = " + id + ";"
+
+	rows, err := db.Query(query)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	query := "SELECT * FROM Twitter.tweets WHERE authorId = " + id + ";"
-
-	rows, _ := db.Query(query)
 	defer rows.Close()
 
 	log.Printf("getting tweets for userID " + id)
@@ -38,7 +39,11 @@ func getTweets(id string) string {
 			log.Fatal(err)
 		}
 
-		marshalled, _ := json.Marshal(SingleTweet)
+		marshalled, err := json.Marshal(SingleTweet)
+
+		if err != nil {
+			log.Fatal(err)
+		}
 
 		tweetArray = append(tweetArray, string(marshalled))
 

@@ -16,7 +16,7 @@ type Tweet struct {
 	retweets    int
 }
 
-func getUserById(id string) string {
+func GetUserById(id string) string {
 	var marshalled []byte
 	retrievedUser := new(User)
 	DbAccessString := GoDotEnvVariable("DB_ACCESS_STRING")

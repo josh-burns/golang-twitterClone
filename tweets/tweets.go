@@ -1,6 +1,7 @@
 package tweets
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
@@ -29,10 +30,18 @@ type NewTweet struct {
 }
 
 func GoDotEnvVariable(key string) string {
-	err := godotenv.Load(".env")
+
+	envFileLocation := os.Getenv("ENV_FILE_LOCATION")
+	fmt.Println(envFileLocation)
+
+	if envFileLocation == "" {
+		envFileLocation = "env/.env"
+	}
+
+	err := godotenv.Load(envFileLocation)
 
 	if err != nil {
-		log.Fatalf("Error loading .env file")
+		log.Fatal(err)
 	}
 
 	return os.Getenv(key)
@@ -42,13 +51,13 @@ func retweetTweet(tweetId int) {
 
 }
 
-func Tweets(w http.ResponseWriter, r *http.Request) {
+func Tweets(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	splitUrl := strings.Split(r.URL.String(), "/")
 	w.Header().Add("Content-Type", "application/json")
-
+	fmt.Println(db)
 	switch r.Method {
 	case "GET":
-		fmt.Fprintf(w, getTweets(splitUrl[len(splitUrl)-1]))
+		fmt.Fprintf(w, GetTweets(db, splitUrl[len(splitUrl)-1]))
 	case "POST":
 		if splitUrl[len(splitUrl)-1] == "new" {
 			fmt.Println("new tweet incoming")

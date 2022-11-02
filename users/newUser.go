@@ -45,7 +45,7 @@ func newUser(body io.ReadCloser) string {
 	lastId, _ := res.LastInsertId()
 	log.Printf("User added : ID = %d", lastId)
 
-	newUserCheckIfAddedResult := getUserById(strconv.Itoa(int(lastId)))
+	newUserCheckIfAddedResult := GetUserById(strconv.Itoa(int(lastId)))
 
 	return newUserCheckIfAddedResult
 }

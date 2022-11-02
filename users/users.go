@@ -55,7 +55,7 @@ func Users(w http.ResponseWriter, r *http.Request) {
 		intId, _ := strconv.Atoi(userId)
 
 		if intId > 0 {
-			fmt.Fprint(w, getUserById(userId))
+			fmt.Fprint(w, GetUserById(userId))
 		} else {
 			if isEmailValid(userId) {
 				w.WriteHeader(200)

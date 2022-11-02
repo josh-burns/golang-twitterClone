@@ -1,27 +1,37 @@
 package tweets
 
 import (
-	"fmt"
-	"github.com/DATA-DOG/go-sqlmock"
+	"os"
+	"regexp"
 	"testing"
+
+	"github.com/DATA-DOG/go-sqlmock"
 )
 
-func GetTweetsTest(t *Testing.T) {
-	fmt.Println("oh hey")
+func TestFindByID(t *testing.T) {
 	db, mock, err := sqlmock.New()
+
+	defer db.Close()
+
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	defer db.Close()
 
+	os.Setenv("ENV_FILE_LOCATION", "../env/.env")
+
+	// fill mock db with expected row
 	rows := sqlmock.NewRows([]string{"id", "authorId", "dateTweeted", "tweetBody", "likes", "retweets"}).
-		AddRow(1, 11, "2021-12-28T22:54:20Z", "hello", 0, 1).
-		AddRow(2, 11, "2021-12-28T22:55:20Z", "world", 1, 0)
+		AddRow(1, 81, "2022-03-27T12:06:50Z", "hello", 3, 9)
 
-	w := httptest.NewRecordor()
-	mock.ExpectExec("SELECT * FROM Twitter.tweets WHERE authorId = 11;").WillReturnRows(sqlmock.NewRows())
+	mock.ExpectQuery(regexp.QuoteMeta("SELECT * FROM Twitter.tweets WHERE authorId = 81")).WillReturnRows(rows)
+	mock.ExpectCommit()
 
-	if err = GetTweets(11); err != nil {
-		t.Errorf("error was not expected while updating stats: %s", err)
+	// call the method
+	res := GetTweets(db, "81")
+
+	expected := "{\"Id\":1,\"AuthorId\":81,\"DateTweeted\":\"2022-03-27T12:06:50Z\",\"TweetBody\":\"hello\",\"Likes\":3,\"Retweets\":9}"
+
+	if res != expected {
+		t.Error("\n EXPECTED: \n", expected, "\n GOT: \n ", res)
 	}
 }
