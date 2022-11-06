@@ -16,19 +16,13 @@ type Tweet struct {
 	retweets    int
 }
 
-func GetUserById(id string) string {
+func GetUserById(db *sql.DB, id string) string {
 	var marshalled []byte
 	retrievedUser := new(User)
-	DbAccessString := GoDotEnvVariable("DB_ACCESS_STRING")
-	db, err := sql.Open("mysql", DbAccessString)
 
 	log.Printf("getting user by id  %s ... ", id)
 
 	query := "SELECT * FROM Twitter.users WHERE userId = " + id + ";"
-
-	if err != nil {
-		log.Fatal("error initialising connection with DB - ", err)
-	}
 
 	rows, _ := db.Query(query)
 	defer rows.Close()

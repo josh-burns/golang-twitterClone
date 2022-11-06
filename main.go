@@ -43,7 +43,7 @@ func main() {
 	defer db.Close()
 	log.Printf("Up and Running")
 	// TODO - refactor users like tweets on 47
-	http.HandleFunc("/users/", users.Users)
+	http.HandleFunc("/users/", func(w http.ResponseWriter, r *http.Request) { users.Users(db, w, r) })
 	http.HandleFunc("/tweets/", func(w http.ResponseWriter, r *http.Request) { tweets.Tweets(db, w, r) })
 
 	http.ListenAndServe(":2828", nil)

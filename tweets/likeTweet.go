@@ -39,7 +39,7 @@ func isTweetAlreadyLiked(tweetId int, likerId int) bool {
 	return hasAlreadyLiked
 }
 
-func likeTweet(body io.ReadCloser) string {
+func LikeTweet(db *sql.DB, body io.ReadCloser) string {
 	bytes, _ := io.ReadAll(body)
 	jsonString := string(bytes)
 
@@ -47,16 +47,18 @@ func likeTweet(body io.ReadCloser) string {
 	tweetId := gjson.Get(jsonString, "tweetId")
 	tweetIdNum, _ := strconv.Atoi(tweetId.Raw)
 
+	tweetToLike := GetTweetbyId(tweetIdNum)
+
+	if len(tweetToLike) == 0 {
+		return "noTweetExists"
+	}
+
 	if isTweetAlreadyLiked(tweetIdNum, int(likerId.Num)) == false {
-		tweetToLike := GetTweetbyId(tweetIdNum)
 
 		currentNumberOfLikes := gjson.Get(tweetToLike, "Likes")
 		likesNum, _ := strconv.Atoi(currentNumberOfLikes.Raw)
 
 		likesNum = likesNum + 1
-
-		DbAccessString := GoDotEnvVariable("DB_ACCESS_STRING")
-		db, _ := sql.Open("mysql", DbAccessString)
 
 		dateLiked := time.Now().Format(time.RFC3339)
 

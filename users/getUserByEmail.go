@@ -7,17 +7,11 @@ import (
 	"log"
 )
 
-func getUserByEmail(email string) string {
+func getUserByEmail(db *sql.DB, email string) string {
 	var marshalled []byte
 	retrievedUser := new(User)
 
-	DbAccessString := GoDotEnvVariable("DB_ACCESS_STRING")
-	db, err := sql.Open("mysql", DbAccessString)
 	query := "SELECT * FROM Twitter.users WHERE email = \"" + email + "\";"
-
-	if err != nil {
-		log.Fatal("error initialising connection with DB - ", err)
-	}
 
 	rows, _ := db.Query(query)
 	defer rows.Close()

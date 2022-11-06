@@ -1,16 +1,14 @@
 package users
 
 import (
+	"database/sql"
 	"fmt"
-	"log"
 	"net/http"
-	"os"
 	"regexp"
 	"strconv"
 	"strings"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/joho/godotenv"
 )
 
 func isEmailValid(e string) bool {
@@ -18,16 +16,16 @@ func isEmailValid(e string) bool {
 	return emailRegex.MatchString(e)
 }
 
-func GoDotEnvVariable(key string) string {
-	// load .env file
-	err := godotenv.Load(".env")
-
-	if err != nil {
-		log.Fatalf("Error loading .env file")
-	}
-
-	return os.Getenv(key)
-}
+// func GoDotEnvVariable(key string) string {
+// 	// load .env file
+// 	err := godotenv.Load(".env")
+//
+// 	if err != nil {
+// 		log.Fatalf("Error loading .env file")
+// 	}
+//
+// 	return os.Getenv(key)
+// }
 
 type NewUser struct {
 	Email         string
@@ -44,7 +42,7 @@ type User struct {
 	DisplayPicUrl string
 }
 
-func Users(w http.ResponseWriter, r *http.Request) {
+func Users(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 
 	splitUrl := strings.Split(r.URL.String(), "/")
 	switch r.Method {
@@ -55,11 +53,11 @@ func Users(w http.ResponseWriter, r *http.Request) {
 		intId, _ := strconv.Atoi(userId)
 
 		if intId > 0 {
-			fmt.Fprint(w, GetUserById(userId))
+			fmt.Fprint(w, GetUserById(db, userId))
 		} else {
 			if isEmailValid(userId) {
 				w.WriteHeader(200)
-				fmt.Fprint(w, getUserByEmail(userId))
+				fmt.Fprint(w, getUserByEmail(db, userId))
 
 			} else {
 				fmt.Fprint(w, "invalid user supplied")
@@ -69,6 +67,6 @@ func Users(w http.ResponseWriter, r *http.Request) {
 	case "POST":
 		w.Header().Add("Content-Type", "application/json")
 		w.WriteHeader(201)
-		fmt.Fprintf(w, newUser(r.Body))
+		fmt.Fprintf(w, newUser(db, r.Body))
 	}
 }

@@ -38,6 +38,8 @@ func GetTweetbyId(id int) string {
 
 		tweetArray = append(tweetArray, string(marshalled))
 	}
+
 	stringArray := strings.Join(tweetArray, ",")
+	fmt.Println(stringArray, len(stringArray))
 	return string(stringArray)
 }

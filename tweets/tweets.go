@@ -64,14 +64,17 @@ func Tweets(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		}
 		if splitUrl[len(splitUrl)-1] == "like" {
 			fmt.Println("Liking tweet...")
-			likeTweetResponse := likeTweet(r.Body)
+			likeTweetResponse := LikeTweet(db, r.Body)
 
 			switch likeTweetResponse {
 			case "liked":
-				fmt.Fprintf(w, "success")
-
+				fmt.Fprintf(w, "{\"message\":\"Success\"}")
+			case "noTweetExists":
+				w.WriteHeader(404)
+				fmt.Fprintf(w, "{\"message\":\"NoTweetExists\"}")
 			case "duplicateTweet":
-				fmt.Fprintf(w, "Tweet Already liked")
+				w.WriteHeader(409)
+				fmt.Fprintf(w, "{\"message\":\"TweetAlreadyLiked\"}")
 
 			}
 		}
