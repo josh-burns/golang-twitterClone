@@ -81,7 +81,7 @@ func LikeTweet(db *sql.DB, body io.ReadCloser) string {
 		return "liked"
 
 	} else {
-		return "duplicateTweet"
+		return "TweetAlreadyLiked"
 	}
 
 	return "like function complete"
