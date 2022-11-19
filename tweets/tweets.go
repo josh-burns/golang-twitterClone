@@ -21,7 +21,7 @@ type Tweet struct {
 	Retweets    int
 }
 
-type NewTweet struct {
+type NewTweetRequest struct {
 	AuthorId    string
 	DateTweeted string
 	TweetBody   string
@@ -60,7 +60,7 @@ func Tweets(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	case "POST":
 		if splitUrl[len(splitUrl)-1] == "new" {
 			fmt.Println("new tweet incoming")
-			fmt.Fprintf(w, newTweet(r.Body))
+			fmt.Fprintf(w, NewTweet(db, r.Body))
 		}
 		if splitUrl[len(splitUrl)-1] == "like" {
 			fmt.Println("Liking tweet...")

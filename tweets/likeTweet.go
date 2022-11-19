@@ -11,12 +11,12 @@ import (
 	"github.com/tidwall/gjson"
 )
 
-func isTweetAlreadyLiked(tweetId int, likerId int) bool {
+func isTweetAlreadyLiked(db *sql.DB, tweetId int, likerId int) bool {
 
 	var hasAlreadyLiked bool
 
-	DbAccessString := GoDotEnvVariable("DB_ACCESS_STRING")
-	db, _ := sql.Open("mysql", DbAccessString)
+	// DbAccessString := GoDotEnvVariable("DB_ACCESS_STRING")
+	// db, _ := sql.Open("mysql", DbAccessString)
 
 	log.Printf("Checking if user has already liked tweet ...")
 
@@ -47,13 +47,14 @@ func LikeTweet(db *sql.DB, body io.ReadCloser) string {
 	tweetId := gjson.Get(jsonString, "tweetId")
 	tweetIdNum, _ := strconv.Atoi(tweetId.Raw)
 
-	tweetToLike := GetTweetbyId(tweetIdNum)
+	tweetToLike := GetTweetbyId(db, tweetIdNum)
+	fmt.Println("this is a test")
 
 	if len(tweetToLike) == 0 {
 		return "noTweetExists"
 	}
 
-	if isTweetAlreadyLiked(tweetIdNum, int(likerId.Num)) == false {
+	if isTweetAlreadyLiked(db, tweetIdNum, int(likerId.Num)) == false {
 
 		currentNumberOfLikes := gjson.Get(tweetToLike, "Likes")
 		likesNum, _ := strconv.Atoi(currentNumberOfLikes.Raw)

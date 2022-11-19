@@ -8,10 +8,10 @@ import (
 	"strings"
 )
 
-func GetTweetbyId(id int) string {
+func GetTweetbyId(db *sql.DB, id int) string {
 	var tweetArray []string
-	DbAccessString := GoDotEnvVariable("DB_ACCESS_STRING")
-	db, _ := sql.Open("mysql", DbAccessString)
+	// DbAccessString := GoDotEnvVariable("DB_ACCESS_STRING")
+	// db, _ := sql.Open("mysql", DbAccessString)
 
 	log.Printf("getting tweet by id %d ...", id)
 
