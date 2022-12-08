@@ -1,0 +1,114 @@
+{
+	"info": {
+		"_postman_id": "f2374d65-e82f-427d-bd06-9e4c3417cbbe",
+		"name": "TwitterCloneGolang",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GETuserByEmail",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:2828/users/ebrinkman3@taobao.com"
+			},
+			"response": []
+		},
+		{
+			"name": "GETUserById",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:2828/users/29"
+			},
+			"response": []
+		},
+		{
+			"name": "POSTNewUser",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"{{$randomUserName}}\",\n    \"displayPicUrl\": \"{{$randomImageUrl}}\",\n    \"email\": \"{{$randomEmail}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:2828/users/"
+			},
+			"response": []
+		},
+		{
+			"name": "GET Tweets",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "localhost:2828/tweets/59"
+			},
+			"response": []
+		},
+		{
+			"name": "POST Tweet",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"authorId\" : 8,\n    \"tweetedAt\": \"{{$isoTimestamp}}\",\n    \"tweetBody\": \"OOO SWIGGY {{$timestamp}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:2828/tweets/new"
+			},
+			"response": []
+		},
+		{
+			"name": "POST Like Tweet",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"authorId\" : 8,\n    \"tweetedAt\": \"{{$isoTimestamp}}\",\n    \"tweetBody\": \"OOO SWIGGY {{$timestamp}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:2828/tweets/like"
+			},
+			"response": []
+		}
+	]
+}
